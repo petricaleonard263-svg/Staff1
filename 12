@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Panel - ROBLOX RP</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a2e; color: white; display: flex; margin: 0; }
+        .sidebar { width: 200px; background: #16213e; height: 100vh; padding: 20px; position: fixed; }
+        .content { margin-left: 250px; padding: 40px; width: 100%; }
+        .card { background: #0f3460; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        input, textarea, select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
+        button { background: #e94560; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+        button:hover { background: #ff4d6d; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>STAFF RP</h2>
+    <p>🏠 Dashboard</p>
+    <p>⚖️ Sancțiuni</p>
+    <p>📜 Regulament</p>
+</div>
+
+<div class="content">
+    <h1>Panel Management Staff</h1>
+    <div class="card">
+        <h3>⚖️ Adaugă Sancțiune Nouă</h3>
+        <input type="text" id="adminName" placeholder="Numele tău (Admin)">
+        <input type="text" id="targetPlayer" placeholder="Nume Jucător Sancționat">
+        <select id="actionType">
+            <option value="WARN">Warn</option>
+            <option value="KICK">Kick</option>
+            <option value="BAN">Ban</option>
+        </select>
+        <textarea id="reason" placeholder="Motiv și Dovadă (Link)"></textarea>
+        <button onclick="sendToDiscord()">Trimite Sancțiunea</button>
+    </div>
+</div>
+
+<script>
+    // ⚠️ Pune URL-ul tău de Webhook între ghilimele mai jos
+    const DISCORD_WEBHOOK = "AICI_PUI_LINK_UL_DE_LA_DISCORD";
+
+    function sendToDiscord() {
+        const admin = document.getElementById('adminName').value;
+        const player = document.getElementById('targetPlayer').value;
+        const action = document.getElementById('actionType').value;
+        const reason = document.getElementById('reason').value;
+
+        if(!admin || !player || !reason) return alert("Completează toate câmpurile!");
+
+        const payload = {
+            embeds: [{
+                title: "🚨 Sancțiune Nouă",
+                color: action === "BAN" ? 15158332 : 3447003,
+                fields: [
+                    { name: "Admin", value: admin, inline: true },
+                    { name: "Jucător", value: player, inline: true },
+                    { name: "Tip Sancțiune", value: action, inline: true },
+                    { name: "Motiv/Dovadă", value: reason }
+                ],
+                footer: { text: "Panel Staff Roblox" },
+                timestamp: new Date()
+            }]
+        };
+
+        fetch(DISCORD_WEBHOOK, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).then(() => {
+            alert("Sancțiunea a fost trimisă pe Discord!");
+            location.reload();
+        }).catch(err => alert("Eroare: " + err));
+    }
+</script>
+
+</body>
+</html>
