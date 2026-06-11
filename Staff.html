@@ -1,2 +1,6 @@
-print("Salut! Aceasta este o comandă executată de pe GitHub.")
-game.Workspace.Baseplate.Color = Color3.fromRGB(255, 0, 0)
+local UserInputService = game:GetService("UserInputService")
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed then
+        print("Tasta apăsată de jucător: " .. input.KeyCode.Name)
+    end
+end)
